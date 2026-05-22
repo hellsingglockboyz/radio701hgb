@@ -141,7 +141,7 @@
         linear-gradient(to bottom, rgba(0,0,0,0.26) 0%, transparent 24%, transparent 58%, rgba(0,0,0,0.46) 100%);
     }
 
-    .merch-center {
+  .merch-center {
       position: absolute;
       inset: 0;
       z-index: 5;
@@ -149,7 +149,7 @@
       grid-template-columns: minmax(0, 1fr) minmax(360px, 520px);
       align-items: center;
       justify-content: center;
-      column-gap: clamp(8px, 2.5vw, 52px);
+      column-gap: clamp(28px, 4vw, 78px);
       padding:
         clamp(76px, 9vh, 128px)
         clamp(42px, 6vw, 120px)
@@ -158,16 +158,17 @@
       pointer-events: none;
     }
 
-    .merch-art {
-      display: block;
-      justify-self: end;
-      width: min(66vw, 1000px);
-      max-height: 66vh;
-      line-height: 0;
-      background: transparent;
-      pointer-events: none;
-      transform: translateX(clamp(-150px, -7vw, -48px));
-    }
+.merch-art {
+  display: block;
+  justify-self: center;
+  width: min(58vw, 920px);
+  max-width: calc(100% - clamp(18px, 3vw, 52px));
+  max-height: 66vh;
+  line-height: 0;
+  background: transparent;
+  pointer-events: none;
+  transform: none;
+}
 
     .merch-image {
       display: block;
@@ -333,6 +334,7 @@
       <div class="sender-embed">
         <div style="text-align: left" class="sender-form-field" data-sender-form-id="dwpz5r"></div>
 
+        <!-- Overlay em cima do branding/link -->
         <div class="sender-brand-cover" aria-hidden="true">
           <img
             src="assets/images/blank-space.png"
