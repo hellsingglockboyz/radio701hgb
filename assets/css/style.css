@@ -588,7 +588,7 @@ a {
 }
 
 .stage.station-playing .speaker-img {
-  animation: speakerBreath 3.15s ease-in-out infinite;
+  animation: speakerBreath 2.45s ease-in-out infinite;
 }
 
 @keyframes speakerBreath {
@@ -597,7 +597,7 @@ a {
   }
 
   50% {
-    transform: scale(1.008) translateY(-0.22%);
+    transform: scale(1.022) translateY(-0.75%);
   }
 }
 
