@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HGB Radio</title>
+  <link rel="icon" type="image/png" href="assets/images/hgb-logo-badge-shield.png" />
+  <link rel="preload" as="video" href="assets/images/comp-1-site.mp4" type="video/mp4" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <div class="stage">
+    <div class="background-container" aria-hidden="true">
+      <div class="bg-media">
+        <img src="assets/images/bg.png" alt="" class="bg-fallback" />
+        <video id="bgIntroVideo" class="bg-video" autoplay muted playsinline preload="auto">
+          <source src="assets/images/comp-1-site.mp4" type="video/mp4" />
+        </video>
+      </div>
+      <div class="bg-darken"></div>
+      <div class="bg-vignette"></div>
+    </div>
+
+    <section class="side-gallery side-gallery-back" aria-hidden="true">
+      <figure class="photo-card photo-card-back photo-left-back-primary">
+        <img src="assets/images/hgb-side-photo-01.png" alt="" />
+      </figure>
+      <figure class="photo-card photo-card-back photo-left-back-secondary">
+        <img src="assets/images/hgb-side-photo-03.png" alt="" />
+      </figure>
+      <figure class="photo-card photo-card-back photo-right-back-primary">
+        <img src="assets/images/hgb-side-photo-02.png" alt="" />
+      </figure>
+      <figure class="photo-card photo-card-back photo-right-back-secondary">
+        <img src="assets/images/hgb-side-photo-04.png" alt="" />
+      </figure>
+    </section>
+
+    <header class="top-bar">
+      <a href="#" class="top-logo" aria-label="HGB"><img src="assets/images/logo-hgb.png" alt="HGB" class="top-logo-img" /></a>
+      <a href="merch.html" class="top-merch" target="_blank" rel="noopener noreferrer">MERCH</a>
+    </header>
+
+    <section class="hero-header" aria-label="Hellsing Glock Boyz">
+      <img src="assets/images/header.png" alt="Hellsing Glock Boyz" class="header-img" />
+    </section>
+
+    <section class="sound-system" aria-label="Hellsing Radio Console">
+      <aside class="side-panel left-panel">
+        <img src="assets/images/speaker-l.png" alt="Left speaker" class="speaker-img" />
+      </aside>
+
+      <main class="center-console">
+        <section class="radio-unit" id="radioUnit">
+          <div class="screen-bg-layer" aria-hidden="true">
+            <img src="assets/images/screen-bg.png" alt="" />
+          </div>
+
+          <img src="assets/images/radio-body.png" alt="HGB Radio" class="radio-bg" />
+
+          <div class="power-area">
+            <span class="power-led" id="powerLed" aria-hidden="true"></span>
+            <button id="powerBtn" class="power-pos has-img" aria-label="Turn radio on or off">
+              <img src="assets/images/btn-power.png" alt="" />
+            </button>
+          </div>
+
+          <div class="knob-container vol-pos" id="volumeKnob" aria-label="Volume" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="40" tabindex="0">
+            <img src="assets/images/knob.png" alt="" />
+          </div>
+
+          <div class="screen-container screen-pos">
+            <div class="screen-glass"></div>
+            <div class="screen-lines"></div>
+            <div class="screen-meta screen-meta-left-top">STATUS</div>
+            <div class="screen-meta screen-meta-right-top">HGB</div>
+            <div class="screen-meta screen-meta-left-bottom">Ψ</div>
+            <div class="screen-meta screen-meta-right-bottom">STEREO</div>
+            <div class="digital-text" aria-live="polite">
+              <span id="mode">FM</span>
+              <span id="freq">---.-</span>
+              <span id="stationName">OFFLINE</span>
+            </div>
+          </div>
+
+          <div class="knob-container tune-pos" id="stationKnob" aria-label="Change station" role="slider" aria-valuemin="0" aria-valuemax="4" aria-valuenow="0" tabindex="0">
+            <img src="assets/images/knob.png" alt="" />
+          </div>
+
+          <nav class="social-controls" aria-label="HGB social links">
+            <a href="#" class="social-button spotify-pos" id="spotifyBtn" target="_blank" rel="noopener noreferrer" aria-label="Spotify">
+              <img src="assets/images/btn-spotify.png" alt="" class="social-button-img" onerror="this.remove();" />
+            </a>
+            <a href="#" class="social-button instagram-pos" id="instagramBtn" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+              <img src="assets/images/btn-instagram.png" alt="" class="social-button-img" onerror="this.remove();" />
+            </a>
+            <a href="#" class="social-button youtube-pos" id="youtubeBtn" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+              <img src="assets/images/btn-youtube.png" alt="" class="social-button-img" onerror="this.remove();" />
+            </a>
+          </nav>
+        </section>
+      </main>
+
+      <aside class="side-panel right-panel">
+        <img src="assets/images/speaker-r.png" alt="Right speaker" class="speaker-img" />
+      </aside>
+    </section>
+
+    <section class="side-gallery side-gallery-front" aria-hidden="true">
+      <figure class="photo-card photo-card-front photo-left-front">
+        <img src="assets/images/hgb-side-photo-05.png" alt="" />
+      </figure>
+      <figure class="photo-card photo-card-front photo-right-front">
+        <img src="assets/images/hgb-side-photo-03.png" alt="" />
+      </figure>
+    </section>
+
+    <section class="logo-layer" aria-hidden="true">
+      <img src="assets/images/hgb-logo-badge-crest.png.png" alt="" class="logo-sticker logo-sticker-left" />
+      <img src="assets/images/hgb-logo-badge-shield.png" alt="" class="logo-sticker logo-sticker-right" />
+    </section>
+
+  <audio id="audio"></audio>
+  <script src="assets/js/script.js"></script>
+</body>
+</html>
