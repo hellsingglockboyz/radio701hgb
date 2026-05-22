@@ -190,10 +190,37 @@
       transform: translateX(clamp(-34px, -1.8vw, -12px));
       user-select: text;
       -webkit-user-select: text;
+
+      /* AJUSTE AQUI SE PRECISAR */
+      --brand-cover-left: 14px;
+      --brand-cover-bottom: 12px;
+      --brand-cover-width: 235px;
+      --brand-cover-height: 38px;
     }
 
     .sender-embed * {
       -webkit-user-drag: none;
+    }
+
+    .sender-brand-cover {
+      position: absolute;
+      left: var(--brand-cover-left);
+      bottom: var(--brand-cover-bottom);
+      width: var(--brand-cover-width);
+      height: var(--brand-cover-height);
+      z-index: 9999;
+      pointer-events: auto;
+      display: block;
+      overflow: hidden;
+      cursor: default;
+    }
+
+    .sender-brand-cover img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      pointer-events: none;
     }
 
     .home-button {
@@ -306,6 +333,15 @@
 
       <div class="sender-embed">
         <div style="text-align: left" class="sender-form-field" data-sender-form-id="dwpz5r"></div>
+
+        <!-- Overlay em cima do branding/link -->
+        <div class="sender-brand-cover" aria-hidden="true">
+          <img
+            src="assets/images/blank-space.png"
+            alt=""
+            draggable="false"
+          />
+        </div>
       </div>
     </div>
 
