@@ -142,6 +142,46 @@ function playSfx(sfx) {
   sfx.play().catch(() => {});
 }
 
+let audioContext = null;
+let audioSource = null;
+let audioGain = null;
+
+function setupAudioVolumeEngine() {
+  if (audioGain) return;
+
+  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContextClass) return;
+
+  try {
+    audioContext = new AudioContextClass();
+    audioSource = audioContext.createMediaElementSource(audio);
+    audioGain = audioContext.createGain();
+
+    audioSource.connect(audioGain);
+    audioGain.connect(audioContext.destination);
+  } catch (error) {
+    audioContext = null;
+    audioSource = null;
+    audioGain = null;
+  }
+}
+
+function unlockAudioVolumeEngine() {
+  setupAudioVolumeEngine();
+
+  if (audioContext && audioContext.state === "suspended") {
+    audioContext.resume().catch(() => {});
+  }
+}
+
+function applyMainAudioVolume(normalizedVolume) {
+  audio.volume = normalizedVolume;
+
+  if (audioGain && audioContext) {
+    audioGain.gain.setTargetAtTime(normalizedVolume, audioContext.currentTime, 0.01);
+  }
+}
+
 function stopAllSounds() {
   audio.pause();
   audio.currentTime = 0;
@@ -213,7 +253,7 @@ function setVolumeFromRotation() {
   let normalized = rotationVolume / volumeMax;
   normalized = Math.max(0, Math.min(1, normalized));
 
-  audio.volume = normalized;
+  applyMainAudioVolume(normalized);
   volumeKnob.style.transform = `rotate(${rotationVolume}deg)`;
 
   const ariaValue = Math.round(normalized * 100);
@@ -320,6 +360,8 @@ function clickNextStation() {
 }
 
 powerBtn.addEventListener("click", () => {
+  unlockAudioVolumeEngine();
+
   if (!radioOn) {
     radioOn = true;
 
@@ -356,6 +398,8 @@ function enableKnobDrag(knob, onMove, onTap) {
 
   function startDrag(clientY, event) {
     if (!radioOn) return;
+
+    unlockAudioVolumeEngine();
 
     dragging = true;
     lastY = clientY;
@@ -421,6 +465,8 @@ function enableKnobDrag(knob, onMove, onTap) {
 function clickStepVolume() {
   if (!radioOn) return;
 
+  unlockAudioVolumeEngine();
+
   const currentPercent = Math.round(
     Math.max(0, Math.min(1, rotationVolume / volumeMax)) * 100
   );
@@ -441,6 +487,7 @@ enableKnobDrag(volumeKnob, (deltaY) => {
 volumeKnob.addEventListener("wheel", (event) => {
   if (!radioOn) return;
 
+  unlockAudioVolumeEngine();
   event.preventDefault();
 
   rotationVolume = Math.max(
