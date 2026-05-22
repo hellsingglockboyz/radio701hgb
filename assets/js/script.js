@@ -290,13 +290,7 @@ function startCurrentStation() {
 
 const stationStep = 270 / (stations.length - 1);
 
-function changeStation(direction) {
-  if (!radioOn || isBooting) return;
-
-  const newIndex = currentStation + direction;
-
-  if (newIndex < 0 || newIndex >= stations.length) return;
-
+function tuneToStation(newIndex) {
   currentStation = newIndex;
   rotationStation = stationStep * currentStation;
 
@@ -306,6 +300,23 @@ function changeStation(direction) {
   stationKnob.setAttribute("aria-valuenow", String(currentStation));
 
   startCurrentStation();
+}
+
+function changeStation(direction) {
+  if (!radioOn || isBooting) return;
+
+  const newIndex = currentStation + direction;
+
+  if (newIndex < 0 || newIndex >= stations.length) return;
+
+  tuneToStation(newIndex);
+}
+
+function clickNextStation() {
+  if (!radioOn || isBooting) return;
+
+  const newIndex = (currentStation + 1) % stations.length;
+  tuneToStation(newIndex);
 }
 
 powerBtn.addEventListener("click", () => {
@@ -335,61 +346,97 @@ powerBtn.addEventListener("click", () => {
   }
 });
 
-function enableKnobDrag(knob, onMove) {
+function enableKnobDrag(knob, onMove, onTap) {
   let dragging = false;
   let lastY = 0;
+  let totalMovement = 0;
+  let pendingDeltaY = 0;
 
-  knob.addEventListener("mousedown", (event) => {
+  const tapMovementLimit = 6;
+
+  function startDrag(clientY, event) {
     if (!radioOn) return;
 
     dragging = true;
-    lastY = event.clientY;
+    lastY = clientY;
+    totalMovement = 0;
+    pendingDeltaY = 0;
     event.preventDefault();
+  }
+
+  function stopDrag() {
+    if (!dragging) return;
+
+    dragging = false;
+
+    if (totalMovement <= tapMovementLimit && typeof onTap === "function") {
+      onTap();
+    }
+
+    totalMovement = 0;
+    pendingDeltaY = 0;
+  }
+
+  function moveDrag(clientY) {
+    if (!dragging) return;
+
+    const deltaY = lastY - clientY;
+
+    if (Math.abs(deltaY) > 1) {
+      totalMovement += Math.abs(deltaY);
+      pendingDeltaY += deltaY;
+      lastY = clientY;
+
+      if (totalMovement > tapMovementLimit) {
+        onMove(pendingDeltaY);
+        pendingDeltaY = 0;
+      }
+    }
+  }
+
+  knob.addEventListener("mousedown", (event) => {
+    startDrag(event.clientY, event);
   });
 
   knob.addEventListener("touchstart", (event) => {
-    if (!radioOn) return;
-
-    dragging = true;
-    lastY = event.touches[0].clientY;
-    event.preventDefault();
+    if (!event.touches.length) return;
+    startDrag(event.touches[0].clientY, event);
   }, { passive: false });
 
-  document.addEventListener("mouseup", () => {
-    dragging = false;
-  });
+  document.addEventListener("mouseup", stopDrag);
 
-  document.addEventListener("touchend", () => {
-    dragging = false;
-  });
+  document.addEventListener("touchend", stopDrag);
+  document.addEventListener("touchcancel", stopDrag);
 
   document.addEventListener("mousemove", (event) => {
-    if (!dragging) return;
-
-    const deltaY = lastY - event.clientY;
-
-    if (Math.abs(deltaY) > 1) {
-      onMove(deltaY);
-      lastY = event.clientY;
-    }
+    moveDrag(event.clientY);
   });
 
   document.addEventListener("touchmove", (event) => {
-    if (!dragging) return;
-
-    const deltaY = lastY - event.touches[0].clientY;
-
-    if (Math.abs(deltaY) > 1) {
-      onMove(deltaY);
-      lastY = event.touches[0].clientY;
-    }
+    if (!event.touches.length) return;
+    moveDrag(event.touches[0].clientY);
   }, { passive: false });
+}
+
+function clickStepVolume() {
+  if (!radioOn) return;
+
+  const currentPercent = Math.round(
+    Math.max(0, Math.min(1, rotationVolume / volumeMax)) * 100
+  );
+
+  const nextPercent = currentPercent >= 100
+    ? 0
+    : Math.min(100, (Math.floor(currentPercent / 25) + 1) * 25);
+
+  rotationVolume = (nextPercent / 100) * volumeMax;
+  setVolumeFromRotation();
 }
 
 enableKnobDrag(volumeKnob, (deltaY) => {
   rotationVolume = Math.max(0, Math.min(volumeMax, rotationVolume + deltaY));
   setVolumeFromRotation();
-});
+}, clickStepVolume);
 
 volumeKnob.addEventListener("wheel", (event) => {
   if (!radioOn) return;
@@ -418,7 +465,7 @@ enableKnobDrag(stationKnob, (deltaY) => {
     changeStation(-1);
     stationDragAccumulator = 0;
   }
-});
+}, clickNextStation);
 
 stationKnob.addEventListener("wheel", (event) => {
   if (!radioOn || isBooting) return;
