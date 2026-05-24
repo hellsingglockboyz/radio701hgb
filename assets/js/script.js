@@ -1,6 +1,70 @@
 const audio = document.getElementById("audio");
 audio.loop = true;
 audio.preload = "auto";
+audio.setAttribute("playsinline", "true");
+audio.setAttribute("webkit-playsinline", "true");
+
+function setMobileBackgroundPlaybackState(state) {
+  if (!("mediaSession" in navigator)) return;
+
+  try {
+    navigator.mediaSession.playbackState = state;
+  } catch (error) {}
+}
+
+function updateMobileBackgroundPlayback(station) {
+  if (!("mediaSession" in navigator) || typeof MediaMetadata !== "function") return;
+
+  const hasAudioStation = Boolean(station && station.src);
+
+  navigator.mediaSession.metadata = new MediaMetadata({
+    title: hasAudioStation ? station.name : "HGB Radio",
+    artist: "Hellsing Glock Boyz",
+    album: hasAudioStation ? `FM ${station.freq}` : "HGB Sets",
+    artwork: [
+      { src: "assets/images/hgb-logo-badge-shield.png", sizes: "96x96", type: "image/png" },
+      { src: "assets/images/hgb-logo-badge-shield.png", sizes: "192x192", type: "image/png" },
+      { src: "assets/images/hgb-logo-badge-shield.png", sizes: "512x512", type: "image/png" }
+    ]
+  });
+}
+
+function setupMobileBackgroundPlaybackControls() {
+  if (!("mediaSession" in navigator)) return;
+
+  const setAction = (action, handler) => {
+    try {
+      navigator.mediaSession.setActionHandler(action, handler);
+    } catch (error) {}
+  };
+
+  setAction("play", () => {
+    if (!radioOn || !stations[currentStation] || !stations[currentStation].src) return;
+
+    unlockAudioVolumeEngine();
+    audio.play().then(() => {
+      setMobileBackgroundPlaybackState("playing");
+    }).catch(() => {});
+  });
+
+  setAction("pause", () => {
+    audio.pause();
+    setMobileBackgroundPlaybackState("paused");
+  });
+
+  setAction("stop", () => {
+    audio.pause();
+    setMobileBackgroundPlaybackState("paused");
+  });
+
+  setAction("previoustrack", () => {
+    changeStation(-1);
+  });
+
+  setAction("nexttrack", () => {
+    clickNextStation();
+  });
+}
 
 const stage = document.querySelector(".stage");
 const radioUnit = document.getElementById("radioUnit");
@@ -215,6 +279,8 @@ const stations = [
 
 const stationStartTimes = stations.map(() => null);
 
+setupMobileBackgroundPlaybackControls();
+
 function setSpeakerMotion(hasAudioStation) {
   stage.classList.toggle("station-playing", Boolean(radioOn && hasAudioStation));
 }
@@ -308,8 +374,11 @@ function startCurrentStation() {
   setSpeakerMotion(Boolean(station.src));
 
   glitchDisplay(station.freq, station.name, () => {
+    updateMobileBackgroundPlayback(station);
+
     if (!station.src) {
       audio.pause();
+      setMobileBackgroundPlaybackState("paused");
       audio.removeAttribute("src");
       audio.load();
       setSpeakerMotion(false);
@@ -325,7 +394,9 @@ function startCurrentStation() {
     audio.onloadedmetadata = () => {
       const elapsed = (Date.now() - stationStartTimes[currentStation]) / 1000;
       audio.currentTime = audio.duration ? elapsed % audio.duration : 0;
-      audio.play().catch(() => {});
+      audio.play().then(() => {
+        setMobileBackgroundPlaybackState("playing");
+      }).catch(() => {});
     };
   });
 }
@@ -384,6 +455,7 @@ powerBtn.addEventListener("click", () => {
     powerLed.classList.remove("on");
 
     stopAllSounds();
+    setMobileBackgroundPlaybackState("paused");
     playSfx(offSfx);
 
     setDisplay("----", "OFFLINE");
