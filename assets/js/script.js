@@ -3,6 +3,10 @@ audio.loop = true;
 audio.preload = "auto";
 audio.setAttribute("playsinline", "true");
 audio.setAttribute("webkit-playsinline", "true");
+audio.setAttribute("x-webkit-airplay", "allow");
+
+const isIOSLikeSafari = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+  (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 
 function setMobileBackgroundPlaybackState(state) {
   if (!("mediaSession" in navigator)) return;
@@ -213,6 +217,10 @@ let audioGain = null;
 function setupAudioVolumeEngine() {
   if (audioGain) return;
 
+  // iOS Safari costuma pausar áudio em segundo plano quando o som principal passa pelo Web Audio.
+  // Então, no iPhone/iPad, deixamos os sets tocando pelo HTMLAudioElement nativo.
+  if (isIOSLikeSafari) return;
+
   const AudioContextClass = window.AudioContext || window.webkitAudioContext;
   if (!AudioContextClass) return;
 
@@ -231,6 +239,8 @@ function setupAudioVolumeEngine() {
 }
 
 function unlockAudioVolumeEngine() {
+  if (isIOSLikeSafari) return;
+
   setupAudioVolumeEngine();
 
   if (audioContext && audioContext.state === "suspended") {
@@ -280,6 +290,10 @@ const stations = [
 const stationStartTimes = stations.map(() => null);
 
 setupMobileBackgroundPlaybackControls();
+
+audio.addEventListener("play", () => setMobileBackgroundPlaybackState("playing"));
+audio.addEventListener("pause", () => setMobileBackgroundPlaybackState("paused"));
+audio.addEventListener("ended", () => setMobileBackgroundPlaybackState("paused"));
 
 function setSpeakerMotion(hasAudioStation) {
   stage.classList.toggle("station-playing", Boolean(radioOn && hasAudioStation));
