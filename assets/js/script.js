@@ -46,6 +46,11 @@ function setupMobileBackgroundPlaybackControls() {
     if (!radioOn || !stations[currentStation] || !stations[currentStation].src) return;
 
     unlockAudioVolumeEngine();
+
+    if (isIOSLikeSafari && iosVolumeModeActive && !document.hidden) {
+      startIOSVolumeAudio();
+    }
+
     audio.play().then(() => {
       setMobileBackgroundPlaybackState("playing");
     }).catch(() => {});
@@ -53,11 +58,13 @@ function setupMobileBackgroundPlaybackControls() {
 
   setAction("pause", () => {
     audio.pause();
+    pauseIOSVolumeAudio(false);
     setMobileBackgroundPlaybackState("paused");
   });
 
   setAction("stop", () => {
     audio.pause();
+    pauseIOSVolumeAudio(false);
     setMobileBackgroundPlaybackState("paused");
   });
 
@@ -213,20 +220,40 @@ function playSfx(sfx) {
 let audioContext = null;
 let audioSource = null;
 let audioGain = null;
+let iosVolumeAudio = null;
+let iosVolumeModeActive = false;
+
+if (isIOSLikeSafari) {
+  iosVolumeAudio = new Audio();
+  iosVolumeAudio.loop = true;
+  iosVolumeAudio.preload = "auto";
+  iosVolumeAudio.setAttribute("playsinline", "true");
+  iosVolumeAudio.setAttribute("webkit-playsinline", "true");
+  iosVolumeAudio.setAttribute("x-webkit-airplay", "allow");
+}
+
+function getNormalizedMainVolume() {
+  return Math.max(0, Math.min(1, rotationVolume / volumeMax));
+}
+
+function getAbsoluteAudioUrl(src) {
+  try {
+    return new URL(src, window.location.href).href;
+  } catch (error) {
+    return src;
+  }
+}
 
 function setupAudioVolumeEngine() {
   if (audioGain) return;
-
-  // iOS Safari costuma pausar áudio em segundo plano quando o som principal passa pelo Web Audio.
-  // Então, no iPhone/iPad, deixamos os sets tocando pelo HTMLAudioElement nativo.
-  if (isIOSLikeSafari) return;
 
   const AudioContextClass = window.AudioContext || window.webkitAudioContext;
   if (!AudioContextClass) return;
 
   try {
     audioContext = new AudioContextClass();
-    audioSource = audioContext.createMediaElementSource(audio);
+    const volumeAudioTarget = isIOSLikeSafari && iosVolumeAudio ? iosVolumeAudio : audio;
+    audioSource = audioContext.createMediaElementSource(volumeAudioTarget);
     audioGain = audioContext.createGain();
 
     audioSource.connect(audioGain);
@@ -239,8 +266,6 @@ function setupAudioVolumeEngine() {
 }
 
 function unlockAudioVolumeEngine() {
-  if (isIOSLikeSafari) return;
-
   setupAudioVolumeEngine();
 
   if (audioContext && audioContext.state === "suspended") {
@@ -251,14 +276,119 @@ function unlockAudioVolumeEngine() {
 function applyMainAudioVolume(normalizedVolume) {
   audio.volume = normalizedVolume;
 
+  if (iosVolumeAudio) {
+    iosVolumeAudio.volume = normalizedVolume;
+  }
+
   if (audioGain && audioContext) {
     audioGain.gain.setTargetAtTime(normalizedVolume, audioContext.currentTime, 0.01);
   }
 }
 
+function syncIOSVolumeAudio() {
+  if (!isIOSLikeSafari || !iosVolumeAudio || !stations[currentStation] || !stations[currentStation].src) return false;
+
+  const src = stations[currentStation].src;
+  const absoluteSrc = getAbsoluteAudioUrl(src);
+
+  if (iosVolumeAudio.src !== absoluteSrc) {
+    iosVolumeAudio.src = src;
+    iosVolumeAudio.load();
+  }
+
+  const syncTime = () => {
+    const mainTime = Number.isFinite(audio.currentTime) ? audio.currentTime : 0;
+
+    if (Number.isFinite(mainTime) && Math.abs((iosVolumeAudio.currentTime || 0) - mainTime) > 0.25) {
+      try {
+        iosVolumeAudio.currentTime = mainTime;
+      } catch (error) {}
+    }
+  };
+
+  if (iosVolumeAudio.readyState >= 1) {
+    syncTime();
+  } else {
+    iosVolumeAudio.addEventListener("loadedmetadata", syncTime, { once: true });
+  }
+
+  return true;
+}
+
+function pauseIOSVolumeAudio(resetTime) {
+  if (!iosVolumeAudio) return;
+
+  iosVolumeAudio.pause();
+
+  if (resetTime) {
+    try {
+      iosVolumeAudio.currentTime = 0;
+    } catch (error) {}
+  }
+}
+
+function startIOSVolumeAudio() {
+  if (!isIOSLikeSafari || !iosVolumeAudio || !radioOn || !stations[currentStation] || !stations[currentStation].src) return;
+
+  unlockAudioVolumeEngine();
+
+  if (!syncIOSVolumeAudio()) return;
+
+  iosVolumeModeActive = true;
+  audio.muted = true;
+  applyMainAudioVolume(getNormalizedMainVolume());
+
+  const playPromise = iosVolumeAudio.play();
+
+  if (playPromise && typeof playPromise.catch === "function") {
+    playPromise.catch(() => {
+      iosVolumeModeActive = false;
+      pauseIOSVolumeAudio(false);
+      audio.muted = false;
+    });
+  }
+}
+
+function suspendIOSVolumeForBackground() {
+  if (!isIOSLikeSafari || !iosVolumeAudio || !iosVolumeModeActive) return;
+
+  const station = stations[currentStation];
+
+  if (station && station.src) {
+    try {
+      audio.currentTime = iosVolumeAudio.currentTime || audio.currentTime || 0;
+    } catch (error) {}
+  }
+
+  pauseIOSVolumeAudio(false);
+  audio.muted = false;
+
+  if (radioOn && station && station.src && audio.paused) {
+    audio.play().then(() => {
+      setMobileBackgroundPlaybackState("playing");
+    }).catch(() => {});
+  }
+}
+
+function resumeIOSVolumeForForeground() {
+  if (!isIOSLikeSafari || !iosVolumeModeActive || document.hidden) return;
+
+  if (!radioOn || !stations[currentStation] || !stations[currentStation].src) {
+    audio.muted = false;
+    pauseIOSVolumeAudio(false);
+    return;
+  }
+
+  startIOSVolumeAudio();
+}
+
 function stopAllSounds() {
   audio.pause();
   audio.currentTime = 0;
+  audio.muted = false;
+
+  pauseIOSVolumeAudio(true);
+  iosVolumeModeActive = false;
 
   turningSfx.pause();
   turningSfx.currentTime = 0;
@@ -292,8 +422,29 @@ const stationStartTimes = stations.map(() => null);
 setupMobileBackgroundPlaybackControls();
 
 audio.addEventListener("play", () => setMobileBackgroundPlaybackState("playing"));
-audio.addEventListener("pause", () => setMobileBackgroundPlaybackState("paused"));
+audio.addEventListener("pause", () => {
+  if (iosVolumeAudio && !iosVolumeAudio.paused) return;
+  setMobileBackgroundPlaybackState("paused");
+});
 audio.addEventListener("ended", () => setMobileBackgroundPlaybackState("paused"));
+
+if (iosVolumeAudio) {
+  iosVolumeAudio.addEventListener("play", () => setMobileBackgroundPlaybackState("playing"));
+  iosVolumeAudio.addEventListener("pause", () => {
+    if (radioOn && !audio.paused && audio.muted) return;
+    setMobileBackgroundPlaybackState("paused");
+  });
+  iosVolumeAudio.addEventListener("ended", () => setMobileBackgroundPlaybackState("paused"));
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      suspendIOSVolumeForBackground();
+    } else {
+      resumeIOSVolumeForForeground();
+    }
+  });
+  window.addEventListener("pagehide", suspendIOSVolumeForBackground);
+  window.addEventListener("pageshow", resumeIOSVolumeForForeground);
+}
 
 function setSpeakerMotion(hasAudioStation) {
   stage.classList.toggle("station-playing", Boolean(radioOn && hasAudioStation));
@@ -395,6 +546,8 @@ function startCurrentStation() {
       setMobileBackgroundPlaybackState("paused");
       audio.removeAttribute("src");
       audio.load();
+      audio.muted = false;
+      pauseIOSVolumeAudio(false);
       setSpeakerMotion(false);
       return;
     }
@@ -404,12 +557,17 @@ function startCurrentStation() {
     }
 
     audio.src = station.src;
+    audio.muted = Boolean(isIOSLikeSafari && iosVolumeModeActive && !document.hidden);
 
     audio.onloadedmetadata = () => {
       const elapsed = (Date.now() - stationStartTimes[currentStation]) / 1000;
       audio.currentTime = audio.duration ? elapsed % audio.duration : 0;
       audio.play().then(() => {
         setMobileBackgroundPlaybackState("playing");
+
+        if (isIOSLikeSafari && iosVolumeModeActive && !document.hidden) {
+          startIOSVolumeAudio();
+        }
       }).catch(() => {});
     };
   });
@@ -555,6 +713,10 @@ function clickStepVolume() {
 
   unlockAudioVolumeEngine();
 
+  if (isIOSLikeSafari) {
+    startIOSVolumeAudio();
+  }
+
   const currentPercent = Math.round(
     Math.max(0, Math.min(1, rotationVolume / volumeMax)) * 100
   );
@@ -568,6 +730,10 @@ function clickStepVolume() {
 }
 
 enableKnobDrag(volumeKnob, (deltaY) => {
+  if (isIOSLikeSafari) {
+    startIOSVolumeAudio();
+  }
+
   rotationVolume = Math.max(0, Math.min(volumeMax, rotationVolume + deltaY));
   setVolumeFromRotation();
 }, clickStepVolume);
@@ -576,6 +742,11 @@ volumeKnob.addEventListener("wheel", (event) => {
   if (!radioOn) return;
 
   unlockAudioVolumeEngine();
+
+  if (isIOSLikeSafari) {
+    startIOSVolumeAudio();
+  }
+
   event.preventDefault();
 
   rotationVolume = Math.max(
