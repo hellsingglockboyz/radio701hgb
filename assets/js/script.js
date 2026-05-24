@@ -211,7 +211,6 @@ const stations = [
   { freq: "97.1", name: "DJ ERA FM", src: "assets/audio/set4_djera.mp3" },
   { freq: "16.29", name: "BADASSFCKNKID RADIO", src: "assets/audio/set5_tsuu.mp3" },
   { freq: "0.800", name: "BoulNoArt FM", src: "assets/audio/set6_esdras.mp3" },
-  { freq: "4.4.4", name: "AddictedToEclo FM", src: "assets/audio/set7_bololo.mp3" },
 ];
 
 const stationStartTimes = stations.map(() => null);
