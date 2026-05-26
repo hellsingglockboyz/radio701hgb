@@ -408,7 +408,7 @@ const volumeMax = 300;
 
 const stations = [
   { freq: "00.0", name: "NO SIGNAL", src: null },
-  { freq: "7.0.1", name: "HELLSING RADIO", src: "assets/audio/set1_701_volte_em_alguns_dias.mp3" },
+  { freq: "7.0.1", name: "HELLSING RADIO", src: "assets/audio/set1_701_5dejunho.mp3" },
   { freq: "7.1.0", name: "HELLSING CAST", src: "assets/audio/set8_hellsingcast.mp3" },
   { freq: "5.555", name: "MINAJ STATION", src: "assets/audio/set2_robert.mp3" },
   { freq: "33.3", name: "RADIO MALDADE", src: "assets/audio/set3_shinz.mp3" },
