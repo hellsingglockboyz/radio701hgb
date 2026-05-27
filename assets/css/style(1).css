@@ -953,22 +953,6 @@ a {
   letter-spacing: 0.08em;
 }
 
-.radio-unit.album-countdown-active .digital-text {
-  transform: translateY(1%);
-}
-
-.radio-unit.album-countdown-active #mode {
-  font-size: clamp(0.58rem, 0.86vw, 1.08rem);
-}
-
-.radio-unit.album-countdown-active #freq {
-  font-size: clamp(0.78rem, 1.22vw, 1.55rem);
-}
-
-.radio-unit.album-countdown-active #stationName {
-  font-size: clamp(0.46rem, 0.62vw, 0.82rem);
-}
-
 .radio-unit.radio-active #mode {
   animation: neonPulse 2.2s ease-in-out infinite;
 }

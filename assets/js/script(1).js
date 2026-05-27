@@ -450,49 +450,10 @@ function setSpeakerMotion(hasAudioStation) {
   stage.classList.toggle("station-playing", Boolean(radioOn && hasAudioStation));
 }
 
-function setAlbumCountdownMode(active) {
-  radioUnit.classList.toggle("album-countdown-active", Boolean(active));
-}
-
 function setDisplay(nextFreq, nextName) {
-  setAlbumCountdownMode(false);
   mode.textContent = "FM";
   freq.textContent = nextFreq;
   stationName.textContent = nextName;
-}
-
-const albumReleaseDate = new Date(2026, 5, 5, 20, 0, 0);
-let albumCountdownInterval = null;
-
-function updateAlbumCountdownDisplay() {
-  if (radioOn || isBooting) return;
-
-  const diff = albumReleaseDate.getTime() - Date.now();
-
-  setAlbumCountdownMode(true);
-  mode.textContent = "7.0.1 ALBUM";
-
-  if (diff <= 0) {
-    freq.textContent = "OUT NOW";
-    stationName.textContent = "PRESS POWER";
-    return;
-  }
-
-  const days = Math.floor(diff / 86400000);
-  const hours = Math.floor(diff / 3600000) % 24;
-  const minutes = Math.floor(diff / 60000) % 60;
-  const seconds = Math.floor(diff / 1000) % 60;
-
-  freq.textContent = `${String(days).padStart(2, "0")}D ${String(hours).padStart(2, "0")}H ${String(minutes).padStart(2, "0")}M ${String(seconds).padStart(2, "0")}S`;
-  stationName.textContent = "PRESS POWER";
-}
-
-function startAlbumCountdownDisplay() {
-  updateAlbumCountdownDisplay();
-
-  if (albumCountdownInterval) return;
-
-  albumCountdownInterval = setInterval(updateAlbumCountdownDisplay, 1000);
 }
 
 function glitchDisplay(finalFreq, finalName, callback) {
@@ -669,7 +630,7 @@ powerBtn.addEventListener("click", () => {
     setMobileBackgroundPlaybackState("paused");
     playSfx(offSfx);
 
-    startAlbumCountdownDisplay();
+    setDisplay("----", "OFFLINE");
   }
 });
 
@@ -821,5 +782,5 @@ stationKnob.addEventListener("wheel", (event) => {
 }, { passive: false });
 
 setVolumeFromRotation();
-startAlbumCountdownDisplay();
+setDisplay("---.-", "OFFLINE");
 stationKnob.setAttribute("aria-valuenow", String(currentStation));
