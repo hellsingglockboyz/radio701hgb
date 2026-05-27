@@ -962,7 +962,7 @@ a {
 }
 
 .radio-unit.album-countdown-active #freq {
-  font-size: clamp(0.78rem, 1.22vw, 1.55rem);
+  font-size: clamp(0.78rem, 1.12vw, 1.55rem);
 }
 
 .radio-unit.album-countdown-active #stationName {
