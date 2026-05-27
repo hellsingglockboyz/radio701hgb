@@ -470,7 +470,7 @@ function updateAlbumCountdownDisplay() {
   const diff = albumReleaseDate.getTime() - Date.now();
 
   setAlbumCountdownMode(true);
-  mode.textContent = "7.0.1 ALBUM";
+  mode.textContent = "7.0.1";
 
   if (diff <= 0) {
     freq.textContent = "OUT NOW";
