@@ -427,24 +427,6 @@ a {
   text-decoration: none;
 }
 
-.top-links {
-  pointer-events: auto;
-  display: flex;
-  align-items: center;
-  gap: clamp(6px, 0.54vw, 10px);
-}
-
-.top-link-separator {
-  color: #f1f1f1;
-  font-size: clamp(0.76rem, 1vw, 1.25rem);
-  font-weight: 700;
-  letter-spacing: 0.13em;
-  text-shadow:
-    0 0 7px rgba(255,255,255,0.38),
-    0 7px 13px rgba(0,0,0,0.92);
-  pointer-events: none;
-}
-
 .top-logo {
   width: clamp(72px, 5.8vw, 118px);
   height: clamp(40px, 3.3vw, 68px);
