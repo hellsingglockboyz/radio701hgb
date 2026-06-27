@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://radio.vampiresarereal.online/sitemap.xml
