@@ -1,242 +1,181 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>HGB Merch</title>
-  <link rel="icon" type="image/png" href="assets/images/hgb-logo-badge-shield.png" />
 
-  <script>
-    document.addEventListener("contextmenu", function (event) {
-      event.preventDefault();
-    });
-
-    document.addEventListener("dragstart", function (event) {
-      event.preventDefault();
-    });
-
-    (function (s, e, n, d, er) {
-      s['Sender'] = er;
-      s[er] = s[er] || function () {
-        (s[er].q = s[er].q || []).push(arguments)
-      }, s[er].l = 1 * new Date();
-      s[er].on = function(event, callback) {
-        s[er].listeners = s[er].listeners || {};
-        (s[er].listeners[event] = s[er].listeners[event] || []).push(callback);
-      };
-      var a = e.createElement(n),
-          m = e.getElementsByTagName(n)[0];
-      a.async = 1;
-      a.src = d;
-      m.parentNode.insertBefore(a, m)
-    })(window, document, 'script', 'https://cdn.sender.net/accounts_resources/universal.js', 'sender');
-    sender('00564c47af0113')
-  </script>
+  <link
+    rel="icon"
+    type="image/png"
+    href="assets/images/hgb-logo-badge-shield.png"
+  />
 
   <style>
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      user-select: none;
-      -webkit-user-select: none;
-      -webkit-user-drag: none;
-      -webkit-touch-callout: none;
     }
 
     html,
     body {
       width: 100%;
-      height: 100%;
       min-height: 100%;
-      overflow: hidden;
       background: #000;
-      font-family: "Courier New", monospace;
-      user-select: none;
-      -webkit-user-select: none;
+      color: #fff;
+      font-family: Arial, Helvetica, sans-serif;
     }
 
     body {
-      position: fixed;
-      inset: 0;
+      overflow-x: hidden;
     }
 
-    img {
-      user-select: none;
-      -webkit-user-select: none;
-      -webkit-user-drag: none;
-      pointer-events: none;
-    }
-
-    a {
-      font: inherit;
-      text-decoration: none;
-    }
+    /* =========================
+       STAGE
+    ========================= */
 
     .stage {
-      position: fixed;
-      inset: 0;
-      width: 100vw;
-      height: 100vh;
+      position: relative;
+      min-height: 100vh;
       min-height: 100svh;
       overflow: hidden;
       background: #000;
       isolation: isolate;
     }
 
+    /* =========================
+       BACKGROUND
+    ========================= */
+
     .background-container {
       position: fixed;
       inset: 0;
+
       z-index: 0;
-      width: 100vw;
-      height: 100vh;
-      min-height: 100svh;
+
+      width: 100%;
+      height: 100%;
+
       overflow: hidden;
+
       background: #000;
+
       pointer-events: none;
     }
 
     .bg-img {
       position: absolute;
       inset: 0;
+
       display: block;
+
       width: 100%;
       height: 100%;
-      min-width: 100%;
-      min-height: 100%;
+
       object-fit: cover;
       object-position: center center;
-      filter: contrast(1.12) brightness(0.58) saturate(0.78);
+
+      filter:
+        contrast(1.12)
+        brightness(0.58)
+        saturate(0.78);
+
       transform: scale(1.045);
       transform-origin: center;
-      pointer-events: none;
     }
 
     .bg-darken {
       position: absolute;
       inset: 0;
+
       background:
-        radial-gradient(circle at 50% 50%, rgba(0,0,0,0.06) 0%, rgba(0,0,0,0.34) 42%, rgba(0,0,0,0.94) 100%),
-        linear-gradient(to bottom, rgba(0,0,0,0.74), rgba(0,0,0,0.22) 35%, rgba(0,0,0,0.88));
-      pointer-events: none;
+        radial-gradient(
+          circle at 50% 50%,
+          rgba(0, 0, 0, 0.04) 0%,
+          rgba(0, 0, 0, 0.28) 42%,
+          rgba(0, 0, 0, 0.90) 100%
+        ),
+        linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0.68),
+          rgba(0, 0, 0, 0.18) 35%,
+          rgba(0, 0, 0, 0.84)
+        );
     }
 
     .bg-vignette {
       position: absolute;
       inset: 0;
+
       background:
-        radial-gradient(ellipse at center, transparent 0%, transparent 34%, rgba(0,0,0,0.92) 100%),
-        linear-gradient(to right, rgba(0,0,0,0.82), transparent 18%, transparent 82%, rgba(0,0,0,0.82));
+        radial-gradient(
+          ellipse at center,
+          transparent 0%,
+          transparent 36%,
+          rgba(0, 0, 0, 0.86) 100%
+        ),
+        linear-gradient(
+          to right,
+          rgba(0, 0, 0, 0.72),
+          transparent 18%,
+          transparent 82%,
+          rgba(0, 0, 0, 0.72)
+        );
+
       mix-blend-mode: multiply;
-      pointer-events: none;
     }
 
     .shadow-layer {
-      position: absolute;
+      position: fixed;
       inset: 0;
+
       z-index: 1;
+
       pointer-events: none;
+
       background:
-        radial-gradient(ellipse at 50% 58%, rgba(0,0,0,0.24) 0%, rgba(0,0,0,0.52) 44%, transparent 70%),
-        linear-gradient(to bottom, rgba(0,0,0,0.26) 0%, transparent 24%, transparent 58%, rgba(0,0,0,0.46) 100%);
+        radial-gradient(
+          ellipse at 50% 58%,
+          rgba(0, 0, 0, 0.18) 0%,
+          rgba(0, 0, 0, 0.42) 44%,
+          transparent 70%
+        ),
+        linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0.22) 0%,
+          transparent 24%,
+          transparent 58%,
+          rgba(0, 0, 0, 0.42) 100%
+        );
     }
 
-  .merch-center {
-      position: absolute;
-      inset: 0;
-      z-index: 5;
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(360px, 520px);
-      align-items: center;
-      justify-content: center;
-      column-gap: clamp(28px, 4vw, 78px);
-      padding:
-        clamp(76px, 9vh, 128px)
-        clamp(42px, 6vw, 120px)
-        clamp(56px, 8vh, 100px)
-        clamp(18px, 3vw, 68px);
-      pointer-events: none;
-    }
-
-.merch-art {
-  display: block;
-  justify-self: center;
-  width: min(58vw, 920px);
-  max-width: calc(100% - clamp(18px, 3vw, 52px));
-  max-height: 66vh;
-  line-height: 0;
-  background: transparent;
-  pointer-events: none;
-  transform: none;
-}
-
-    .merch-image {
-      display: block;
-      width: 100%;
-      height: auto;
-      max-height: 66vh;
-      object-fit: contain;
-      background: transparent;
-      image-rendering: auto;
-      pointer-events: none;
-    }
-
-    .sender-embed {
-      width: min(34vw, 520px);
-      min-width: 360px;
-      pointer-events: auto;
-      position: relative;
-      z-index: 8;
-      justify-self: start;
-      transform: translateX(clamp(-34px, -1.8vw, -12px));
-      user-select: text;
-      -webkit-user-select: text;
-
-      /* AJUSTE AQUI SE PRECISAR */
-      --brand-cover-left: 14px;
-      --brand-cover-bottom: 12px;
-      --brand-cover-width: 235px;
-      --brand-cover-height: 38px;
-    }
-
-    .sender-embed * {
-      -webkit-user-drag: none;
-    }
-
-    .sender-brand-cover {
-      position: absolute;
-      left: var(--brand-cover-left);
-      bottom: var(--brand-cover-bottom);
-      width: var(--brand-cover-width);
-      height: var(--brand-cover-height);
-      z-index: 9999;
-      pointer-events: auto;
-      display: block;
-      overflow: hidden;
-      cursor: default;
-    }
-
-    .sender-brand-cover img {
-      display: block;
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      pointer-events: none;
-    }
+    /* =========================
+       HOME / LOGO
+    ========================= */
 
     .home-button {
-      position: absolute;
+      position: fixed;
+
       top: clamp(18px, 3.2vh, 42px);
       left: clamp(24px, 4vw, 76px);
+
       z-index: 10;
+
       width: clamp(72px, 5.8vw, 118px);
       height: clamp(40px, 3.3vw, 68px);
+
       display: block;
+
       background: transparent;
+
       filter:
-        drop-shadow(0 8px 14px rgba(0,0,0,0.82));
-      transition: opacity 0.16s ease, transform 0.16s ease;
-      pointer-events: auto;
+        drop-shadow(0 8px 14px rgba(0, 0, 0, 0.82));
+
+      transition:
+        opacity 0.16s ease,
+        transform 0.16s ease;
     }
 
     .home-button:hover {
@@ -246,113 +185,467 @@
 
     .home-logo {
       display: block;
+
       width: 100%;
       height: 100%;
+
       object-fit: contain;
+
       background: transparent;
+
       pointer-events: none;
     }
 
-    @media (max-width: 1050px) {
-      .merch-center {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto auto;
-        row-gap: clamp(12px, 2vh, 22px);
-        padding:
-          clamp(86px, 10vh, 120px)
-          clamp(18px, 5vw, 52px)
-          clamp(34px, 5vh, 70px);
-      }
+    /* =========================
+       CONTENT
+    ========================= */
 
-      .merch-art {
-        justify-self: center;
-        width: min(92vw, 850px);
-        max-height: 48vh;
-        transform: none;
-      }
+    .merch-content {
+      position: relative;
 
-      .merch-image {
-        max-height: 48vh;
-      }
+      z-index: 5;
 
-      .sender-embed {
-        justify-self: center;
-        width: min(94vw, 520px);
-        min-width: 0;
-        transform: none;
-      }
+      width: min(850px, calc(100% - 40px));
+
+      margin: 0 auto;
+
+      min-height: 100vh;
+      min-height: 100svh;
+
+      display: flex;
+
+      align-items: center;
+      justify-content: center;
+
+      padding:
+        110px 0
+        70px;
     }
 
+    /* =========================
+       MESSAGE BOX
+    ========================= */
+
+    .message {
+      width: 100%;
+
+      /*
+        Box bem transparente.
+        O background aparece bastante por trás.
+      */
+      background: rgba(0, 0, 0, 0.38);
+
+      /*
+        Borda quase invisível.
+      */
+      border: 1px solid rgba(255, 255, 255, 0.055);
+
+      padding:
+        clamp(30px, 4vw, 48px)
+        clamp(26px, 4.5vw, 52px);
+
+      /*
+        Sem sombra pesada.
+      */
+      box-shadow: none;
+
+      /*
+        Blur mínimo para não parecer
+        uma interface de IA.
+      */
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+    }
+
+    /* =========================
+       HEADER
+    ========================= */
+
+    .message-header {
+      margin-bottom: 34px;
+    }
+
+.message-header h1 {
+  font-family: Impact, "Arial Narrow", sans-serif;
+
+  font-size: clamp(26px, 3vw, 38px);
+
+  line-height: 1;
+
+  font-weight: 500;
+
+  letter-spacing: 2 px;
+
+  color: #ff00a8;
+
+  text-transform: uppercase;
+
+  text-shadow: none;
+}
+
+    .message-header .date {
+      margin-top: 11px;
+
+      font-family: Arial, Helvetica, sans-serif;
+
+      font-size: 10px;
+
+      line-height: 1.4;
+
+      font-weight: 400;
+
+      letter-spacing: 0.8px;
+
+      color: rgba(255, 255, 255, 0.38);
+
+      text-transform: uppercase;
+    }
+
+    /* =========================
+       TEXT
+    ========================= */
+
+    .message p {
+      font-family: Arial, Helvetica, sans-serif;
+
+      font-size: clamp(13px, 1.15vw, 15px);
+
+      line-height: 1.75;
+
+      font-weight: 400;
+
+      color: rgba(255, 255, 255, 0.72);
+
+      margin-bottom: 23px;
+    }
+
+    .message p:last-child {
+      margin-bottom: 0;
+    }
+
+    .message strong {
+      color: rgba(255, 255, 255, 0.94);
+
+      font-weight: 600;
+    }
+
+    /* =========================
+       SECTION TITLE
+    ========================= */
+
+    .section-title {
+      display: block;
+
+      margin-top: 40px;
+      margin-bottom: 17px;
+
+      font-family: Arial, Helvetica, sans-serif;
+
+      font-size: 12px;
+
+      line-height: 1.3;
+
+      font-weight: 700;
+
+      letter-spacing: 0.4px;
+
+      color: #ff00a8;
+
+      text-transform: uppercase;
+    }
+
+    /* =========================
+       CONTACT
+    ========================= */
+
+    .contact {
+      margin-top: 38px !important;
+
+      padding-top: 25px;
+
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .email {
+      color: rgba(255, 255, 255, 0.82);
+
+      font-weight: 400;
+
+      text-decoration: none;
+
+      transition:
+        color 0.15s ease;
+    }
+
+    .email:hover {
+      color: #ff00a8;
+    }
+
+    /* =========================
+       MOBILE
+    ========================= */
+
     @media (max-width: 700px) {
-      body {
+
+      .stage {
+        overflow: auto;
+      }
+
+      .background-container {
         position: fixed;
       }
 
-      .stage {
-        overflow: hidden;
+      .merch-content {
+        width: calc(100% - 24px);
+
+        min-height: 100svh;
+
+        align-items: flex-start;
+
+        padding:
+          100px 0
+          35px;
       }
 
-      .merch-art,
-      .merch-image {
-        max-height: 42vh;
+      .message {
+        padding:
+          27px 22px;
+
+        background: rgba(0, 0, 0, 0.44);
       }
 
-      .sender-embed {
-        width: min(94vw, 500px);
+      .message-header {
+        margin-bottom: 29px;
+      }
+
+      .message-header h1 {
+        font-size: 26px;
+
+        letter-spacing: -0.8px;
+      }
+
+      .message-header .date {
+        font-size: 9px;
+      }
+
+      .message p {
+        font-size: 13px;
+
+        line-height: 1.7;
+
+        margin-bottom: 21px;
+      }
+
+      .section-title {
+        margin-top: 34px;
+        margin-bottom: 16px;
+
+        font-size: 11px;
+      }
+
+      .contact {
+        margin-top: 34px !important;
+        padding-top: 22px;
+      }
+
+      .home-button {
+        left: 20px;
+        top: 18px;
+      }
+    }
+
+    /* =========================
+       VERY SMALL SCREENS
+    ========================= */
+
+    @media (max-width: 400px) {
+
+      .merch-content {
+        width: calc(100% - 18px);
+
+        padding-top: 92px;
+      }
+
+      .message {
+        padding:
+          24px 18px;
+      }
+
+      .message-header h1 {
+        font-size: 23px;
+      }
+
+      .message p {
+        font-size: 12.5px;
       }
     }
   </style>
 </head>
 
 <body>
+
   <div class="stage">
-    <div class="background-container" aria-hidden="true">
+
+    <!-- =========================
+         BACKGROUND
+    ========================= -->
+
+    <div
+      class="background-container"
+      aria-hidden="true"
+    >
+
       <img
         src="assets/images/bg.png"
         alt=""
         class="bg-img"
         draggable="false"
       />
+
       <div class="bg-darken"></div>
+
       <div class="bg-vignette"></div>
+
     </div>
 
-    <div class="shadow-layer" aria-hidden="true"></div>
+    <div
+      class="shadow-layer"
+      aria-hidden="true"
+    ></div>
 
-    <div class="merch-center">
-      <div class="merch-art" aria-label="New Merch Soon">
-        <img
-          src="assets/images/newmerchsoon.png"
-          alt="New Merch Soon"
-          class="merch-image"
-          draggable="false"
-          decoding="async"
-          fetchpriority="high"
-        />
-      </div>
 
-      <div class="sender-embed">
-        <div style="text-align: left" class="sender-form-field" data-sender-form-id="dwpz5r"></div>
+    <!-- =========================
+         HOME / HGB LOGO
+    ========================= -->
 
-        <!-- Overlay em cima do branding/link -->
-        <div class="sender-brand-cover" aria-hidden="true">
-          <img
-            src="assets/images/blank-space.png"
-            alt=""
-            draggable="false"
-          />
-        </div>
-      </div>
-    </div>
+    <a
+      href="./"
+      class="home-button"
+      aria-label="Back to home"
+    >
 
-    <a href="./" class="home-button" aria-label="Back to home">
       <img
         src="assets/images/logo-hgb.png"
         alt="HGB"
         class="home-logo"
         draggable="false"
       />
+
     </a>
+
+
+    <!-- =========================
+         MERCH MESSAGE
+    ========================= -->
+
+    <main class="merch-content">
+
+      <article class="message">
+
+        <!-- HEADER -->
+
+        <div class="message-header">
+
+          <h1>MERCH</h1>
+
+          <div class="date">
+            Última atualização: 29 agosto 2026
+          </div>
+
+        </div>
+
+
+        <!-- =========================
+             GENERAL UPDATE
+        ========================= -->
+
+        <p>
+          <strong>
+            TODAS AS MERCHS COM CAMISETAS + PULSEIRAS,
+            OU APENAS CAMISETAS, JÁ FORAM ENTREGUES.
+          </strong>
+        </p>
+
+        <p>
+          Dá uma localizada no seu e-mail e confere também
+          a caixa de <strong>spam/lixo eletrônico</strong>,
+          caso ainda não tenha visto.
+        </p>
+
+        <p>
+          Nossa merch não tem previsão para voltar por enquanto.
+          Temos algumas ideias, mas sem previsão para uma nova coleção.
+        </p>
+
+
+        <!-- =========================
+             BRACELET ORDERS
+        ========================= -->
+
+        <span class="section-title">
+          Sobre pedidos de apenas pulseira
+        </span>
+
+
+        <p>
+          Tivemos alguns problemas com o fornecedor responsável pelas
+          pulseiras. O produto chegou a ser enviado, mas acabou não havendo
+          nada na entrega e tivemos que solicitar o reembolso.
+        </p>
+
+        <p>
+          Depois disso, tentamos realizar o pedido novamente e,
+          infelizmente, ele também acabou sendo reembolsado.
+        </p>
+
+        <p>
+          Já estamos em contato com o fornecedor e arrumando o pedido,
+          fazendo o máximo possível para que ele seja enviado o mais rápido
+          possível pra gente e, depois, pra vocês.
+        </p>
+
+        <p>
+          Queremos resolver isso e deixar tudo funcionando de forma mais
+          linear antes de começarmos novos lançamentos.
+        </p>
+
+
+        <!-- =========================
+             FINAL MESSAGE
+        ========================= -->
+
+        <p>
+          Obrigado de verdade pela confiança.
+          Somos um grupo independente, não temos uma empresa gigante
+          nas nossas costas comandando tudo, mas tentamos fazer tudo
+          com o máximo de comprometimento possível.
+        </p>
+
+
+        <!-- =========================
+             CONTACT
+        ========================= -->
+
+        <p class="contact">
+
+          Contato:
+
+          <br><br>
+
+          <a
+            href="mailto:devilorghgb@gmail.com"
+            class="email"
+          >
+            devilorghgb@gmail.com
+          </a>
+
+        </p>
+
+      </article>
+
+    </main>
+
   </div>
+
 </body>
 </html>
