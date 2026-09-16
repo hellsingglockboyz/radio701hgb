@@ -1,10 +1,11 @@
+```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>HGB Merch</title>
+  <title>HGB — Blog</title>
 
   <link
     rel="icon"
@@ -52,16 +53,13 @@
     .background-container {
       position: fixed;
       inset: 0;
-
       z-index: 0;
 
       width: 100%;
       height: 100%;
 
       overflow: hidden;
-
       background: #000;
-
       pointer-events: none;
     }
 
@@ -161,7 +159,7 @@
       top: clamp(18px, 3.2vh, 42px);
       left: clamp(24px, 4vw, 76px);
 
-      z-index: 10;
+      z-index: 20;
 
       width: clamp(72px, 5.8vw, 118px);
       height: clamp(40px, 3.3vw, 68px);
@@ -197,10 +195,10 @@
     }
 
     /* =========================
-       CONTENT
+       BLOG CONTENT
     ========================= */
 
-    .merch-content {
+    .blog-content {
       position: relative;
 
       z-index: 5;
@@ -212,87 +210,120 @@
       min-height: 100vh;
       min-height: 100svh;
 
-      display: flex;
-
-      align-items: center;
-      justify-content: center;
-
       padding:
-        110px 0
-        70px;
+        120px 0
+        80px;
     }
 
     /* =========================
-       MESSAGE BOX
+       BLOG HEADER
     ========================= */
 
-    .message {
+    .blog-header {
+      margin-bottom: 42px;
+    }
+
+    .blog-header h1 {
+      font-family: Impact, "Arial Narrow", sans-serif;
+
+      font-size: clamp(30px, 4vw, 48px);
+
+      line-height: 1;
+
+      font-weight: 500;
+
+      letter-spacing: 2px;
+
+      color: #ff00a8;
+
+      text-transform: uppercase;
+
+      text-shadow: none;
+    }
+
+    .blog-header p {
+      margin-top: 12px;
+
+      font-size: 11px;
+
+      letter-spacing: 1px;
+
+      color: rgba(255, 255, 255, 0.38);
+
+      text-transform: uppercase;
+    }
+
+    /* =========================
+       POST
+    ========================= */
+
+    .post {
       width: 100%;
 
-      /*
-        Box bem transparente.
-        O background aparece bastante por trás.
-      */
-      background: rgba(0, 0, 0, 0.38);
-
-      /*
-        Borda quase invisível.
-      */
-      border: 1px solid rgba(255, 255, 255, 0.055);
+      margin-bottom: 32px;
 
       padding:
         clamp(30px, 4vw, 48px)
         clamp(26px, 4.5vw, 52px);
 
-      /*
-        Sem sombra pesada.
-      */
+      background: rgba(0, 0, 0, 0.38);
+
+      border: 1px solid rgba(255, 255, 255, 0.055);
+
       box-shadow: none;
 
-      /*
-        Blur mínimo para não parecer
-        uma interface de IA.
-      */
       backdrop-filter: blur(2px);
       -webkit-backdrop-filter: blur(2px);
     }
 
     /* =========================
-       HEADER
+       POST HEADER
     ========================= */
 
-    .message-header {
-      margin-bottom: 34px;
+    .post-header {
+      margin-bottom: 32px;
+
+      padding-bottom: 22px;
+
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
 
-.message-header h1 {
-  font-family: Impact, "Arial Narrow", sans-serif;
+    .post-category {
+      display: block;
 
-  font-size: clamp(26px, 3vw, 38px);
-
-  line-height: 1;
-
-  font-weight: 500;
-
-  letter-spacing: 2 px;
-
-  color: #ff00a8;
-
-  text-transform: uppercase;
-
-  text-shadow: none;
-}
-
-    .message-header .date {
-      margin-top: 11px;
-
-      font-family: Arial, Helvetica, sans-serif;
+      margin-bottom: 12px;
 
       font-size: 10px;
 
-      line-height: 1.4;
+      font-weight: 700;
 
-      font-weight: 400;
+      letter-spacing: 1px;
+
+      color: #ff00a8;
+
+      text-transform: uppercase;
+    }
+
+    .post h2 {
+      font-family: Impact, "Arial Narrow", sans-serif;
+
+      font-size: clamp(25px, 3vw, 36px);
+
+      line-height: 1.05;
+
+      font-weight: 500;
+
+      letter-spacing: 1px;
+
+      color: #fff;
+
+      text-transform: uppercase;
+    }
+
+    .post-date {
+      margin-top: 11px;
+
+      font-size: 10px;
 
       letter-spacing: 0.8px;
 
@@ -302,12 +333,10 @@
     }
 
     /* =========================
-       TEXT
+       POST TEXT
     ========================= */
 
-    .message p {
-      font-family: Arial, Helvetica, sans-serif;
-
+    .post p {
       font-size: clamp(13px, 1.15vw, 15px);
 
       line-height: 1.75;
@@ -319,11 +348,11 @@
       margin-bottom: 23px;
     }
 
-    .message p:last-child {
+    .post p:last-child {
       margin-bottom: 0;
     }
 
-    .message strong {
+    .post strong {
       color: rgba(255, 255, 255, 0.94);
 
       font-weight: 600;
@@ -336,10 +365,8 @@
     .section-title {
       display: block;
 
-      margin-top: 40px;
+      margin-top: 38px;
       margin-bottom: 17px;
-
-      font-family: Arial, Helvetica, sans-serif;
 
       font-size: 12px;
 
@@ -350,6 +377,31 @@
       letter-spacing: 0.4px;
 
       color: #ff00a8;
+
+      text-transform: uppercase;
+    }
+
+    /* =========================
+       STATUS
+    ========================= */
+
+    .status {
+      display: inline-block;
+
+      margin-top: 4px;
+      margin-bottom: 25px;
+
+      padding: 6px 10px;
+
+      border: 1px solid rgba(255, 0, 168, 0.35);
+
+      color: #ff00a8;
+
+      font-size: 9px;
+
+      font-weight: 700;
+
+      letter-spacing: 0.8px;
 
       text-transform: uppercase;
     }
@@ -373,8 +425,7 @@
 
       text-decoration: none;
 
-      transition:
-        color 0.15s ease;
+      transition: color 0.15s ease;
     }
 
     .email:hover {
@@ -387,48 +438,52 @@
 
     @media (max-width: 700px) {
 
-      .stage {
-        overflow: auto;
-      }
-
-      .background-container {
-        position: fixed;
-      }
-
-      .merch-content {
+      .blog-content {
         width: calc(100% - 24px);
-
-        min-height: 100svh;
-
-        align-items: flex-start;
 
         padding:
           100px 0
-          35px;
+          40px;
       }
 
-      .message {
+      .blog-header {
+        margin-bottom: 30px;
+      }
+
+      .blog-header h1 {
+        font-size: 32px;
+      }
+
+      .blog-header p {
+        font-size: 9px;
+      }
+
+      .post {
         padding:
           27px 22px;
 
         background: rgba(0, 0, 0, 0.44);
       }
 
-      .message-header {
-        margin-bottom: 29px;
+      .post-header {
+        margin-bottom: 27px;
+
+        padding-bottom: 19px;
       }
 
-      .message-header h1 {
-        font-size: 26px;
-
-        letter-spacing: -0.8px;
-      }
-
-      .message-header .date {
+      .post-category {
         font-size: 9px;
       }
 
-      .message p {
+      .post h2 {
+        font-size: 25px;
+      }
+
+      .post-date {
+        font-size: 9px;
+      }
+
+      .post p {
         font-size: 13px;
 
         line-height: 1.7;
@@ -438,14 +493,10 @@
 
       .section-title {
         margin-top: 34px;
+
         margin-bottom: 16px;
 
         font-size: 11px;
-      }
-
-      .contact {
-        margin-top: 34px !important;
-        padding-top: 22px;
       }
 
       .home-button {
@@ -460,25 +511,30 @@
 
     @media (max-width: 400px) {
 
-      .merch-content {
+      .blog-content {
         width: calc(100% - 18px);
 
         padding-top: 92px;
       }
 
-      .message {
+      .post {
         padding:
           24px 18px;
       }
 
-      .message-header h1 {
-        font-size: 23px;
+      .blog-header h1 {
+        font-size: 28px;
       }
 
-      .message p {
+      .post h2 {
+        font-size: 22px;
+      }
+
+      .post p {
         font-size: 12.5px;
       }
     }
+
   </style>
 </head>
 
@@ -535,95 +591,125 @@
 
 
     <!-- =========================
-         MERCH MESSAGE
+         BLOG
     ========================= -->
 
-    <main class="merch-content">
+    <main class="blog-content">
 
-      <article class="message">
+      <header class="blog-header">
 
-        <!-- HEADER -->
+        <h1>UPDATES</h1>
 
-        <div class="message-header">
+        <p>
+          Hellsing Glock Boyz — notícias, atualizações e comunicados
+        </p>
 
-          <h1>MERCH</h1>
+      </header>
 
-          <div class="date">
-            Última atualização: 29 agosto 2026
+
+      <!-- =========================
+           POST — 15 SETEMBRO
+      ========================= -->
+
+      <article class="post">
+
+        <header class="post-header">
+
+          <span class="post-category">
+            MERCH / UPDATE
+          </span>
+
+          <h2>
+            ATUALIZAÇÃO DOS PEDIDOS
+          </h2>
+
+          <div class="post-date">
+            15 setembro 2026
           </div>
 
-        </div>
+        </header>
 
 
-        <!-- =========================
-             GENERAL UPDATE
-        ========================= -->
-
-        <p>
-          <strong>
-            TODAS AS MERCHS COM CAMISETAS + PULSEIRAS,
-            OU APENAS CAMISETAS, JÁ FORAM ENTREGUES.
-          </strong>
-        </p>
-
-        <p>
-          Dá uma localizada no seu e-mail e confere também
-          a caixa de <strong>spam/lixo eletrônico</strong>,
-          caso ainda não tenha visto.
-        </p>
-
-        <p>
-          Nossa merch não tem previsão para voltar por enquanto.
-          Temos algumas ideias, mas sem previsão para uma nova coleção.
-        </p>
-
-
-        <!-- =========================
-             BRACELET ORDERS
-        ========================= -->
-
-        <span class="section-title">
-          Sobre pedidos de apenas pulseira
+        <span class="status">
+          pedidos em preparação
         </span>
 
 
         <p>
-          Tivemos alguns problemas com o fornecedor responsável pelas
-          pulseiras. O produto chegou a ser enviado, mas acabou não havendo
-          nada na entrega e tivemos que solicitar o reembolso.
+          Passando aqui pra atualizar vocês sobre os pedidos e também
+          pedir desculpas pelo nosso sumiço nos últimos dias.
         </p>
 
         <p>
-          Depois disso, tentamos realizar o pedido novamente e,
-          infelizmente, ele também acabou sendo reembolsado.
+          Estamos <strong>sem Instagram no momento</strong> e já estamos
+          correndo atrás para conseguir reativar a conta e voltar qunado possível. Assim que tivermos qualquer novidade, vamos
+          avisar por aqui ou e-mail.
+        </p>
+
+
+        <span class="section-title">
+          Sobre as pulseiras
+        </span>
+
+        <p>
+          Finalmente, <strong>as pulseiras chegaram pra gente.</strong>
         </p>
 
         <p>
-          Já estamos em contato com o fornecedor e arrumando o pedido,
-          fazendo o máximo possível para que ele seja enviado o mais rápido
-          possível pra gente e, depois, pra vocês.
+          Já estamos separando e <strong>embrulhando todos os pedidos</strong>
+          e nossa previsão é que <strong>até sexta-feira todos sejam enviados
+          pelos Correios.</strong>
         </p>
 
         <p>
-          Queremos resolver isso e deixar tudo funcionando de forma mais
-          linear antes de começarmos novos lançamentos.
+          Sabemos que demorou mais do que deveria e agradecemos muito
+          pela paciência de quem ficou esperando.
         </p>
 
 
-        <!-- =========================
-             FINAL MESSAGE
-        ========================= -->
+        <span class="section-title">
+          Sobre o endereço
+        </span>
 
         <p>
-          somos um grupo independente, não temos uma empresa gigante
-          nas nossas costas comandando tudo, mas estamos fazendo tudo
-          com o máximo de comprometimento possível. obrigado pela confiança
+          Também percebemos que <strong>alguns pedidos foram feitos sem
+          o número da casa no endereço de entrega.</strong>
+        </p>
+
+        <p>
+          Estamos entrando em contato por <strong>e-mail individualmente</strong>
+          com todas as pessoas que tiveram esse problema.
+          Dá uma olhada na sua caixa de entrada e também no
+          <strong>spam/lixo eletrônico.</strong>
+        </p>
+
+        <p>
+          Se você recebeu nosso e-mail sobre isso, responde pra gente
+          com o número da residência para conseguirmos deixar tudo
+          certinho antes do envio.
         </p>
 
 
-        <!-- =========================
-             CONTACT
-        ========================= -->
+        <span class="section-title">
+          Desculpas pelo sumiço
+        </span>
+
+        <p>
+          Mais uma vez, desculpa pela demora e por termos ficado meio
+          sumidos.
+        </p>
+
+        <p>
+          Somos um grupo independente e algumas coisas acabaram levando
+          mais tempo do que esperávamos, mas estamos trabalhando pra
+          colocar <strong>todos os pedidos em dia</strong> e fazer tudo
+          chegar até vocês corretamente.
+        </p>
+
+        <p>
+          Obrigado de verdade pela paciência e pela confiança na HGB.
+        </p>
+
 
         <p class="contact">
 
@@ -648,3 +734,4 @@
 
 </body>
 </html>
+```
