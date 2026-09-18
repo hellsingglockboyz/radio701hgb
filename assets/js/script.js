@@ -200,7 +200,7 @@ if (bgIntroVideo && backgroundContainer) {
 }
 
 if (spotifyBtn) spotifyBtn.href = "https://open.spotify.com/artist/6eETbW3z9hqi4ZvdNkdsS1";
-if (instagramBtn) instagramBtn.href = "https://instagram.com/hellsingglockboyz";
+if (instagramBtn) instagramBtn.href = "https://instagram.com/hellsingglockbboyz";
 if (youtubeBtn) youtubeBtn.href = "https://www.youtube.com/@vampiresarereal";
 
 const turningSfx = new Audio("assets/audio/turning.mp3");
